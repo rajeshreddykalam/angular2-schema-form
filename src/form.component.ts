@@ -17,7 +17,7 @@ import {
   Validator
 } from './model';
 
-import {SchemaValidatorFactory, ZSchemaValidatorFactory} from './schemavalidatorfactory';
+import {SchemaValidatorFactory} from './schemavalidatorfactory';
 import {WidgetFactory} from './widgetfactory';
 import {TerminatorService} from './terminator.service';
 
@@ -38,9 +38,6 @@ export function useFactory(schemaValidatorFactory, validatorRegistry) {
     SchemaPreprocessor,
     WidgetFactory,
     {
-      provide: SchemaValidatorFactory,
-      useClass: ZSchemaValidatorFactory
-    }, {
       provide: FormPropertyFactory,
       useFactory: useFactory,
       deps: [SchemaValidatorFactory, ValidatorRegistry]
@@ -59,6 +56,8 @@ export class FormComponent implements OnChanges {
   @Input() validators: { [path: string]: Validator } = {};
 
   @Output() onChange = new EventEmitter<{ value: any }>();
+
+  @Output() modelChange = new EventEmitter<any>();
 
   @Output() isValid = new EventEmitter<boolean>();
 
@@ -96,6 +95,14 @@ export class FormComponent implements OnChanges {
       this.rootProperty = this.formPropertyFactory.createProperty(this.schema);
 
       this.rootProperty.valueChanges.subscribe(value => {
+        if(this.modelChange.observers.length > 0) { // two way binding is used
+          if (this.model) {
+            Object.assign(this.model, value);
+          } else {
+            this.model = value;
+          }
+          this.modelChange.emit(value);
+        }
         this.onChange.emit({value: value});
       });
       this.rootProperty.errorsChanges.subscribe(value => {
