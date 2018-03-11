@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # 1.2.2 (unreleased)
 
 # Bug fixes
@@ -33,7 +31,6 @@
 - Added support for multiple select (Gavin Foley)
 - Angular5 and Typescript 2.4.2 support
 
->>>>>>> d07e5c3d6754b356dc7097d4b95c73a3da060966
 # 1.0.1 (2017-09-12)
 
 # Bug fixes
